@@ -23,7 +23,7 @@ const Navbar = () => {
   const roles = [
     { label: "Student", icon: GraduationCap, href: "/dashboard" },
     { label: "College Admin", icon: Building2, href: "#" },
-    { label: "Recruiter", icon: Briefcase, href: "#" },
+    { label: "Recruiter", icon: Briefcase, href: "/#recruiters" },
   ];
 
   return (
