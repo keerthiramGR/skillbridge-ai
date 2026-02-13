@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, Sparkles, Brain, Target, Users } from "lucide-react";
+import { ArrowRight, Sparkles, Brain, Target, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
@@ -39,10 +39,6 @@ const Hero = () => {
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
-            <Button variant="glass" size="xl" className="gap-2">
-              <Play className="h-5 w-5" />
-              Watch Demo
-            </Button>
           </div>
 
           {/* Stats */}
