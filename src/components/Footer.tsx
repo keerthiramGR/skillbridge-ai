@@ -42,7 +42,7 @@ const Footer = () => {
                 <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
               </div>
               <span className="text-xl font-bold">
-                <span className="text-gradient">Edugram</span>
+                <span className="text-gradient">SkillBridge</span>
                 <span className="text-muted-foreground"> AI</span>
               </span>
             </Link>
@@ -87,10 +87,10 @@ const Footer = () => {
         {/* Bottom */}
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Edugram AI. All rights reserved.
+            © {new Date().getFullYear()} SkillBridge AI. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
-            Built with <span className="text-primary">♥</span> for the future of education
+            Built with <span className="text-primary"></span> for the future of education
           </p>
         </div>
       </div>

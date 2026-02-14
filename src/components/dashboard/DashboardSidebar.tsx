@@ -42,8 +42,9 @@ const DashboardSidebar = ({ activeTab, onTabChange }: DashboardSidebarProps) => 
           <Link to="/" className="flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-primary" />
             <span className="font-bold text-sm">
-              <span className="text-gradient">Edugram</span>
-              <span className="text-muted-foreground"> AI</span>
+             <span className="text-white">SkillBridge</span>
+<span className="text-muted-foreground"> AI</span>
+
             </span>
           </Link>
         )}
