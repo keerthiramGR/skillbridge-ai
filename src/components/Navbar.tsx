@@ -37,7 +37,7 @@ const Navbar = () => {
               <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
             </div>
             <span className="text-xl font-bold">
-              <span className="text-gradient"></span>
+              <span className="text-gradient">SkillBridge</span>
               <span className="text-muted-foreground"> AI</span>
             </span>
           </Link>
