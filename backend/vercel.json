@@ -1,0 +1,27 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "api/index.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "api/index.py"
+        }
+    ],
+    "env": {
+        "SUPABASE_URL": "@supabase_url",
+        "SUPABASE_ANON_KEY": "@supabase_anon_key",
+        "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+        "GOOGLE_CLIENT_ID": "@google_client_id",
+        "GOOGLE_CLIENT_SECRET": "@google_client_secret",
+        "JWT_SECRET_KEY": "@jwt_secret_key",
+        "OPENAI_API_KEY": "@openai_api_key",
+        "RECRUITER_ACCESS_KEY": "@recruiter_access_key",
+        "ADMIN_PASSCODE": "@admin_passcode",
+        "FRONTEND_URL": "@frontend_url"
+    }
+}

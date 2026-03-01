@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SkillBridge AI — Bridging Student Skills with Industry Opportunities using Artificial Intelligence. AI-driven skill intelligence platform replacing resume-based hiring.">
+    <title>SkillBridge AI — AI-Powered Skill Intelligence Platform</title>
+
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+        /* Page-specific particle styles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleFloat 8s ease-in-out infinite;
+        }
+        @keyframes particleFloat {
+            0% { opacity: 0; transform: translateY(0) scale(0); }
+            15% { opacity: 0.6; }
+            50% { opacity: 0.3; transform: translateY(-200px) scale(1); }
+            100% { opacity: 0; transform: translateY(-400px) scale(0.5); }
+        }
+        .workflow-step {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        .workflow-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .feature-card {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.6s ease-out;
+        }
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="animated-bg" id="animatedBg"></div>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+        <div class="logo-icon">
+            <i data-lucide="brain-circuit"></i>
+        </div>
+        <span>SkillBridge <span style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI</span></span>
+    </a>
+    <div class="navbar-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+            <i data-lucide="moon" id="themeIcon"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section" id="hero">
+    <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        AI-Powered Skill Intelligence
+    </div>
+
+    <h1 class="hero-title">
+        Bridge Your <span class="gradient-text">Skills</span><br>
+        With Industry <span class="gradient-text">Opportunities</span>
+    </h1>
+
+    <p class="hero-subtitle">
+        SkillBridge AI replaces resume-based hiring with AI-driven skill intelligence.
+        Students solve real problems. AI evaluates capabilities. Recruiters hire verified talent.
+    </p>
+
+    <!-- Role Selection Cards -->
+    <div class="role-cards-container" id="roleCards">
+        <!-- Student Card -->
+        <div class="role-card student" onclick="selectRole('student')" id="card-student">
+            <div class="role-card-icon">
+                <i data-lucide="graduation-cap"></i>
+            </div>
+            <h3 class="role-card-title">Student Portal</h3>
+            <p class="role-card-desc">
+                Solve real industry challenges, build your AI-verified Skill DNA profile,
+                get personalized career guidance from your AI Career Twin, and get discovered by top recruiters.
+            </p>
+            <div class="role-card-arrow">
+                <span>Enter as Student</span>
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+        </div>
+
+        <!-- Recruiter Card -->
+        <div class="role-card recruiter" onclick="selectRole('recruiter')" id="card-recruiter">
+            <div class="role-card-icon">
+                <i data-lucide="briefcase"></i>
+            </div>
+            <h3 class="role-card-title">Recruiter Portal</h3>
+            <p class="role-card-desc">
+                Upload real-world problem statements, leverage AI-powered talent matching to find
+                the best candidates, and hire based on verified skills — not just resumes.
+            </p>
+            <div class="role-card-arrow">
+                <span>Enter as Recruiter</span>
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+        </div>
+
+        <!-- Admin Card -->
+        <div class="role-card admin" onclick="selectRole('admin')" id="card-admin">
+            <div class="role-card-icon">
+                <i data-lucide="shield-check"></i>
+            </div>
+            <h3 class="role-card-title">Admin Portal</h3>
+            <p class="role-card-desc">
+                Manage platform operations, approve recruiter accounts, moderate problem statements,
+                monitor platform analytics, and ensure quality standards across the ecosystem.
+            </p>
+            <div class="role-card-arrow">
+                <span>Enter as Admin</span>
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section style="padding: 6rem 2rem; position: relative;" id="howItWorks">
+    <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;">
+            How <span class="gradient-text">SkillBridge AI</span> Works
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            A seamless workflow powered by artificial intelligence
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+            <div class="workflow-step glass-card" style="text-align: center; padding: 2rem 1.5rem;">
+                <div style="width:56px;height:56px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:var(--primary-400);">
+                    <i data-lucide="upload-cloud"></i>
+                </div>
+                <h4 style="font-weight:700;margin-bottom:0.5rem;">Recruiters Upload</h4>
+                <p style="font-size:0.85rem;color:var(--text-secondary);">Real industry problems with evaluation criteria and required skills</p>
+            </div>
+
+            <div class="workflow-step glass-card" style="text-align: center; padding: 2rem 1.5rem;">
+                <div style="width:56px;height:56px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(59,130,246,0.2));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:var(--accent-400);">
+                    <i data-lucide="code-2"></i>
+                </div>
+                <h4 style="font-weight:700;margin-bottom:0.5rem;">Students Solve</h4>
+                <p style="font-size:0.85rem;color:var(--text-secondary);">Submit solutions via GitHub repos, project files, and documentation</p>
+            </div>
+
+            <div class="workflow-step glass-card" style="text-align: center; padding: 2rem 1.5rem;">
+                <div style="width:56px;height:56px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(16,185,129,0.2));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:var(--success-400);">
+                    <i data-lucide="scan-eye"></i>
+                </div>
+                <h4 style="font-weight:700;margin-bottom:0.5rem;">AI Evaluates</h4>
+                <p style="font-size:0.85rem;color:var(--text-secondary);">Skill DNA Engine analyzes coding behavior, quality, and growth patterns</p>
+            </div>
+
+            <div class="workflow-step glass-card" style="text-align: center; padding: 2rem 1.5rem;">
+                <div style="width:56px;height:56px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;color:var(--warning-400);">
+                    <i data-lucide="handshake"></i>
+                </div>
+                <h4 style="font-weight:700;margin-bottom:0.5rem;">Smart Matching</h4>
+                <p style="font-size:0.85rem;color:var(--text-secondary);">AI maps verified skills to recruiter requirements for perfect matches</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Innovations Section -->
+<section style="padding: 6rem 2rem; position: relative;" id="innovations">
+    <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;">
+            Core <span class="gradient-text">AI Innovations</span>
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 3rem; max-width:600px; margin-left:auto; margin-right:auto;">
+            Five breakthrough AI systems that power the platform
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; text-align: left;">
+            <div class="feature-card glass-card" style="padding: 2rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                    <div style="width:44px;height:44px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));display:flex;align-items:center;justify-content:center;color:var(--primary-400);"><i data-lucide="dna"></i></div>
+                    <h4 style="font-weight:700;font-size:1.1rem;">Skill DNA Engine</h4>
+                </div>
+                <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;">Analyzes coding behavior, problem-solving approach, submission quality, learning consistency, and improvement rate to generate a dynamic Skill DNA Profile unique to every student.</p>
+            </div>
+
+            <div class="feature-card glass-card" style="padding: 2rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                    <div style="width:44px;height:44px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(59,130,246,0.2));display:flex;align-items:center;justify-content:center;color:var(--accent-400);"><i data-lucide="bot"></i></div>
+                    <h4 style="font-weight:700;font-size:1.1rem;">AI Career Twin</h4>
+                </div>
+                <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;">A personalized AI mentor that recommends next skills, predicts career readiness, suggests challenges, and tracks growth daily — your intelligent career companion.</p>
+            </div>
+
+            <div class="feature-card glass-card" style="padding: 2rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                    <div style="width:44px;height:44px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(16,185,129,0.2));display:flex;align-items:center;justify-content:center;color:var(--success-400);"><i data-lucide="mic"></i></div>
+                    <h4 style="font-weight:700;font-size:1.1rem;">AI Shadow Interviewer</h4>
+                </div>
+                <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;">AI conducts simulated interviews evaluating reasoning, communication, and technical thinking. Generates an Interview Readiness Score to prepare you for real opportunities.</p>
+            </div>
+
+            <div class="feature-card glass-card" style="padding: 2rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                    <div style="width:44px;height:44px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2));display:flex;align-items:center;justify-content:center;color:var(--warning-400);"><i data-lucide="network"></i></div>
+                    <h4 style="font-weight:700;font-size:1.1rem;">Smart Talent Matching</h4>
+                </div>
+                <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;">AI maps Student Skill DNA to Problem Performance to Recruiter Requirements. Automatically recommends the best-fit candidates for every role.</p>
+            </div>
+
+            <div class="feature-card glass-card" style="padding: 2rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+                    <div style="width:44px;height:44px;border-radius:var(--border-radius-md);background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2));display:flex;align-items:center;justify-content:center;color:#ec4899;"><i data-lucide="factory"></i></div>
+                    <h4 style="font-weight:700;font-size:1.1rem;">Industry Problem Ecosystem</h4>
+                </div>
+                <p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.7;">Recruiters upload real-world problem statements with domains, difficulty levels, required skills, and evaluation criteria. Students prove themselves on authentic challenges.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer style="padding: 3rem 2rem; border-top: 1px solid var(--border-glass); text-align: center;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;margin-bottom:1rem;">
+            <div class="logo-icon" style="width:32px;height:32px;font-size:0.9rem;">
+                <i data-lucide="brain-circuit"></i>
+            </div>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;">SkillBridge AI</span>
+        </div>
+        <p style="color:var(--text-tertiary);font-size:0.85rem;margin-bottom:0.5rem;">
+            Bridging Student Skills with Industry Opportunities using Artificial Intelligence
+        </p>
+        <p style="color:var(--text-tertiary);font-size:0.8rem;">
+            &copy; 2026 SkillBridge AI. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Scripts -->
+<script src="js/app.js"></script>
+
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, index * 120);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.workflow-step, .feature-card').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Generate floating particles
+    function createParticles() {
+        const bg = document.getElementById('animatedBg');
+        const colors = ['rgba(99,102,241,0.3)', 'rgba(139,92,246,0.3)', 'rgba(14,165,233,0.2)'];
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.width = Math.random() * 6 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = Math.random() * 6 + 6 + 's';
+            bg.appendChild(particle);
+        }
+    }
+    createParticles();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard — SkillBridge AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="animated-bg"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <button class="btn btn-icon btn-ghost" onclick="toggleSidebar()" style="display:none;" id="sidebarToggle">
+                <i data-lucide="menu"></i>
+            </button>
+            <a href="../index.html" class="navbar-brand">
+                <div class="logo-icon"><i data-lucide="brain-circuit"></i></div>
+                <span>SkillBridge <span
+                        style="background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">AI</span></span>
+            </a>
+        </div>
+        <div class="navbar-actions">
+            <button class="theme-toggle" id="themeToggle"><i data-lucide="moon" id="themeIcon"></i></button>
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 1rem;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:var(--border-radius-full);cursor:pointer;"
+                id="userMenu">
+                <img class="avatar avatar-sm" id="userAvatar"
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=student" alt="Avatar">
+                <span style="font-size:0.85rem;font-weight:600;" id="userName">Student</span>
+                <i data-lucide="chevron-down" style="width:14px;height:14px;color:var(--text-tertiary);"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="sidebar-section-title">Main</li>
+                <li><a class="sidebar-link active" data-tab="tab-marketplace" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="store"></i></span> Problem Marketplace
+                    </a></li>
+                <li><a class="sidebar-link" data-tab="tab-workspace" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="cpu"></i></span> AI Workspace
+                    </a></li>
+                <li><a class="sidebar-link" data-tab="tab-submissions" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="send"></i></span> My Submissions
+                    </a></li>
+
+                <li class="sidebar-section-title">AI Insights</li>
+                <li><a class="sidebar-link" data-tab="tab-skilldna" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="dna"></i></span> Skill DNA
+                    </a></li>
+                <li><a class="sidebar-link" data-tab="tab-careertwin" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="bot"></i></span> Career Twin
+                    </a></li>
+                <li><a class="sidebar-link" data-tab="tab-interview" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="mic"></i></span> Shadow Interview
+                    </a></li>
+
+                <li class="sidebar-section-title">Achievements</li>
+                <li><a class="sidebar-link" data-tab="tab-badges" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="award"></i></span> Badge Center
+                    </a></li>
+                <li><a class="sidebar-link" data-tab="tab-growth" onclick="switchTab(this)">
+                        <span class="icon"><i data-lucide="trending-up"></i></span> Growth Timeline
+                    </a></li>
+            </ul>
+
+            <div style="padding:1rem;margin-top:auto;">
+                <button class="btn btn-ghost" style="width:100%;justify-content:flex-start;color:var(--danger-400);"
+                    onclick="SessionManager.logout()">
+                    <i data-lucide="log-out" style="width:18px;height:18px;"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Overview -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));color:var(--primary-400);">
+                            <i data-lucide="code-2"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">12</div>
+                    <div class="stat-card-label">Problems Solved</div>
+                    <div class="stat-card-trend up">↑ 3 this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(59,130,246,0.2));color:var(--accent-400);">
+                            <i data-lucide="dna"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">87%</div>
+                    <div class="stat-card-label">Skill DNA Score</div>
+                    <div class="stat-card-trend up">↑ 5% growth</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(16,185,129,0.2));color:var(--success-400);">
+                            <i data-lucide="award"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">8</div>
+                    <div class="stat-card-label">Badges Earned</div>
+                    <div class="stat-card-trend up">↑ 2 new</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2));color:var(--warning-400);">
+                            <i data-lucide="mic"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">74</div>
+                    <div class="stat-card-label">Interview Score</div>
+                    <div class="stat-card-trend up">↑ 8 pts</div>
+                </div>
+            </div>
+
+            <!-- Tab: Problem Marketplace -->
+            <div class="tab-panel active" id="tab-marketplace">
+                <div class="page-header"
+                    style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h1 class="page-title">Problem Marketplace</h1>
+                        <p class="page-subtitle">Real industry challenges from top recruiters</p>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <select class="form-select" style="width:auto;padding:0.5rem 1rem;" id="filterDomain">
+                            <option value="">All Domains</option>
+                            <option value="web">Web Development</option>
+                            <option value="ml">Machine Learning</option>
+                            <option value="data">Data Science</option>
+                            <option value="mobile">Mobile Dev</option>
+                            <option value="devops">DevOps</option>
+                            <option value="security">Cybersecurity</option>
+                        </select>
+                        <select class="form-select" style="width:auto;padding:0.5rem 1rem;" id="filterDifficulty">
+                            <option value="">All Levels</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem;margin-top:1.5rem;"
+                    id="problemsGrid">
+                    <!-- Problems loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab: AI Workspace -->
+            <div class="tab-panel" id="tab-workspace">
+                <div class="page-header"
+                    style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h1 class="page-title">AI Workspace</h1>
+                        <p class="page-subtitle">Write, run, and test code — your full coding toolkit</p>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="switchWorkspaceTool('editor')"
+                            id="wsTabEditor" style="opacity:1;">Code Editor</button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchWorkspaceTool('templates')"
+                            id="wsTabTemplates" style="opacity:0.6;">Templates</button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchWorkspaceTool('json')" id="wsTabJson"
+                            style="opacity:0.6;">JSON Tool</button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchWorkspaceTool('regex')" id="wsTabRegex"
+                            style="opacity:0.6;">Regex Tester</button>
+                    </div>
+                </div>
+
+                <!-- Sub-tab: Code Editor -->
+                <div id="wsTool-editor">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="glass-card" style="padding:0;overflow:hidden;">
+                            <div
+                                style="padding:0.75rem 1rem;border-bottom:1px solid var(--border-glass);display:flex;justify-content:space-between;align-items:center;">
+                                <div style="display:flex;align-items:center;gap:0.5rem;">
+                                    <select class="form-select"
+                                        style="width:auto;padding:0.35rem 0.75rem;font-size:0.8rem;" id="codeLang">
+                                        <option value="javascript">JavaScript</option>
+                                        <option value="html">HTML</option>
+                                    </select>
+                                    <span style="font-size:0.75rem;color:var(--text-tertiary);">editor.js</span>
+                                </div>
+                                <div style="display:flex;gap:0.35rem;">
+                                    <button class="btn btn-ghost btn-sm" onclick="clearEditor()" title="Clear"><i
+                                            data-lucide="trash-2" style="width:14px;height:14px;"></i></button>
+                                    <button class="btn btn-primary btn-sm" onclick="runCode()"><i data-lucide="play"
+                                            style="width:14px;height:14px;"></i> Run</button>
+                                </div>
+                            </div>
+                            <textarea id="codeEditor" spellcheck="false"
+                                style="width:100%;min-height:400px;background:var(--bg-primary);color:var(--text-primary);border:none;padding:1rem;font-family:'JetBrains Mono','Fira Code','Cascadia Code',monospace;font-size:0.85rem;line-height:1.7;resize:vertical;tab-size:2;outline:none;">// SkillBridge AI — Code Editor
+// Write JavaScript and press Run to execute!
+
+function fibonacci(n) {
+  if (n <= 1) return n;
+  let a = 0, b = 1;
+  for (let i = 2; i <= n; i++) {
+    [a, b] = [b, a + b];
+  }
+  return b;
+}
+
+// Test it out
+for (let i = 1; i <= 10; i++) {
+  console.log(`fib(${i}) = ${fibonacci(i)}`);
+}
+
+console.log('\n✅ Code executed successfully!');</textarea>
+                        </div>
+                        <div class="glass-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
+                            <div
+                                style="padding:0.75rem 1rem;border-bottom:1px solid var(--border-glass);display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-weight:600;font-size:0.85rem;">📟 Console Output</span>
+                                <button class="btn btn-ghost btn-sm" onclick="clearOutput()">Clear</button>
+                            </div>
+                            <div id="codeOutput"
+                                style="flex:1;min-height:400px;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.8;overflow-y:auto;background:var(--bg-primary);">
+                                <span style="color:var(--text-tertiary);">// Output will appear here after you run your
+                                    code</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card"
+                        style="margin-top:1rem;padding:0.75rem 1rem;display:flex;gap:1rem;justify-content:center;font-size:0.8rem;color:var(--text-tertiary);">
+                        <span>💡 <strong>Tip:</strong> Use <code
+                                style="background:var(--bg-tertiary);padding:0.1rem 0.4rem;border-radius:4px;">console.log()</code>
+                            to print output</span>
+                        <span>|</span>
+                        <span>⌨️ <strong>Tab</strong> key inserts spaces</span>
+                        <span>|</span>
+                        <span>🔒 Code runs safely in a sandboxed environment</span>
+                    </div>
+                </div>
+
+                <!-- Sub-tab: Templates -->
+                <div id="wsTool-templates" style="display:none;">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;"
+                        id="templateGrid"></div>
+                </div>
+
+                <!-- Sub-tab: JSON Tool -->
+                <div id="wsTool-json" style="display:none;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="glass-card" style="padding:0;overflow:hidden;">
+                            <div
+                                style="padding:0.75rem 1rem;border-bottom:1px solid var(--border-glass);display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-weight:600;font-size:0.85rem;">📥 Input JSON</span>
+                                <button class="btn btn-primary btn-sm" onclick="formatJSON()"><i data-lucide="wand-2"
+                                        style="width:14px;height:14px;"></i> Format</button>
+                            </div>
+                            <textarea id="jsonInput" spellcheck="false" placeholder='Paste your JSON here...'
+                                style="width:100%;min-height:400px;background:var(--bg-primary);color:var(--text-primary);border:none;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;line-height:1.7;resize:vertical;outline:none;">{"name":"SkillBridge AI","features":["Skill DNA","Career Twin","Shadow Interviewer"],"version":1.0,"active":true}</textarea>
+                        </div>
+                        <div class="glass-card" style="padding:0;overflow:hidden;">
+                            <div
+                                style="padding:0.75rem 1rem;border-bottom:1px solid var(--border-glass);display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-weight:600;font-size:0.85rem;">📤 Formatted Output</span>
+                                <button class="btn btn-ghost btn-sm" onclick="copyJSON()"><i data-lucide="copy"
+                                        style="width:14px;height:14px;"></i> Copy</button>
+                            </div>
+                            <pre id="jsonOutput"
+                                style="min-height:400px;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.7;overflow:auto;background:var(--bg-primary);margin:0;color:var(--success-400);"></pre>
+                        </div>
+                    </div>
+                    <div class="glass-card" style="margin-top:1rem;">
+                        <h4 style="font-weight:700;margin-bottom:0.5rem;">📊 JSON Stats</h4>
+                        <div id="jsonStats"
+                            style="display:flex;gap:2rem;font-size:0.85rem;color:var(--text-secondary);">Paste JSON and
+                            click Format to see stats</div>
+                    </div>
+                </div>
+
+                <!-- Sub-tab: Regex Tester -->
+                <div id="wsTool-regex" style="display:none;">
+                    <div class="glass-card">
+                        <h3 style="font-weight:700;margin-bottom:1rem;">🔍 Regex Tester</h3>
+                        <div style="display:grid;grid-template-columns:3fr 1fr;gap:1rem;margin-bottom:1rem;">
+                            <div class="form-group" style="margin:0;">
+                                <label class="form-label">Regular Expression</label>
+                                <input type="text" class="form-input" id="regexPattern"
+                                    placeholder="e.g., \d{3}-\d{3}-\d{4}"
+                                    style="font-family:'JetBrains Mono',monospace;">
+                            </div>
+                            <div class="form-group" style="margin:0;">
+                                <label class="form-label">Flags</label>
+                                <input type="text" class="form-input" id="regexFlags" placeholder="gi" value="g"
+                                    style="font-family:'JetBrains Mono',monospace;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Test String</label>
+                            <textarea id="regexTestString" class="form-textarea"
+                                placeholder="Enter text to test against..."
+                                style="font-family:'JetBrains Mono',monospace;min-height:120px;">Call me at 123-456-7890 or 987-654-3210. My email is test@email.com and backup is user123@domain.org</textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="testRegex()" style="margin-bottom:1rem;"><i
+                                data-lucide="play" style="width:16px;height:16px;"></i> Test Regex</button>
+                        <div id="regexResults"
+                            style="padding:1rem;background:var(--bg-primary);border-radius:var(--border-radius-md);font-family:'JetBrains Mono',monospace;font-size:0.85rem;min-height:60px;">
+                            <span style="color:var(--text-tertiary);">Results will appear here...</span>
+                        </div>
+                    </div>
+                    <div class="glass-card" style="margin-top:1rem;">
+                        <h4 style="font-weight:700;margin-bottom:0.75rem;">📋 Common Patterns</h4>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0.75rem;"
+                            id="regexCheatsheet"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: My Submissions -->
+            <div class="tab-panel" id="tab-submissions">
+                <div class="page-header" style="display:flex;justify-content:space-between;align-items:center;">
+                    <div>
+                        <h1 class="page-title">My Submissions</h1>
+                        <p class="page-subtitle">Track all your challenge submissions</p>
+                    </div>
+                </div>
+                <div class="data-table-container" style="margin-top:1.5rem;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Problem</th>
+                                <th>Domain</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                                <th>AI Score</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTable">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Skill DNA -->
+            <div class="tab-panel" id="tab-skilldna">
+                <div class="page-header">
+                    <h1 class="page-title">Skill DNA Profile</h1>
+                    <p class="page-subtitle">Your AI-generated dynamic skill analysis</p>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                    <div class="glass-card">
+                        <h3 style="font-weight:700;margin-bottom:1rem;">Skill Radar</h3>
+                        <div class="skill-dna-container">
+                            <canvas id="skillDnaChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-weight:700;margin-bottom:1.5rem;">Skill Breakdown</h3>
+                        <div id="skillBreakdown">
+                            <!-- Skill bars rendered here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card" style="margin-top:1.5rem;">
+                    <h3 style="font-weight:700;margin-bottom:1rem;">AI Analysis Summary</h3>
+                    <p style="color:var(--text-secondary);line-height:1.8;" id="skillSummaryText">
+                        Your Skill DNA shows strong proficiency in problem-solving and web development,
+                        with growing capabilities in machine learning. Focus areas: increase data structures
+                        practice and begin exploring system design challenges to round out your profile.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tab: Career Twin -->
+            <div class="tab-panel" id="tab-careertwin">
+                <div class="page-header"
+                    style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h1 class="page-title">AI Career Twin</h1>
+                        <p class="page-subtitle">Interactive career intelligence — assess, learn, grow</p>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="switchCareerTool('assess')" id="ctTabAssess"
+                            style="opacity:1;">Skill Quiz</button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchCareerTool('learn')" id="ctTabLearn"
+                            style="opacity:0.6;">Learn</button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchCareerTool('goals')" id="ctTabGoals"
+                            style="opacity:0.6;">My Goals</button>
+                        <button class="btn btn-secondary btn-sm" onclick="switchCareerTool('chat')" id="ctTabChat"
+                            style="opacity:0.6;">AI Chat</button>
+                    </div>
+                </div>
+
+                <!-- Sub-tab: Skill Quiz -->
+                <div id="ctTool-assess">
+                    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+                        <div class="glass-card">
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+                                <h3 style="font-weight:700;">🎯 Skill Self-Assessment Quiz</h3>
+                                <span class="badge badge-primary" id="quizProgress">Question 1 of 10</span>
+                            </div>
+                            <div id="quizContainer">
+                                <div id="quizQuestion"
+                                    style="font-size:1.1rem;font-weight:600;margin-bottom:1.5rem;line-height:1.6;">
+                                </div>
+                                <div id="quizOptions" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+                            </div>
+                            <div id="quizComplete" style="display:none;text-align:center;padding:2rem;">
+                                <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
+                                <h3 style="font-weight:700;font-size:1.5rem;margin-bottom:0.5rem;">Quiz Complete!</h3>
+                                <p style="color:var(--text-secondary);margin-bottom:1.5rem;" id="quizSummaryText"></p>
+                                <button class="btn btn-primary" onclick="restartQuiz()"><i data-lucide="rotate-ccw"
+                                        style="width:16px;height:16px;"></i> Take Again</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="glass-card" style="margin-bottom:1.25rem;">
+                                <h4 style="font-weight:700;margin-bottom:0.75rem;">Your Score</h4>
+                                <div class="stat-card-value" style="font-size:2.5rem;color:var(--primary-400);"
+                                    id="quizScoreDisplay">—</div>
+                                <div class="progress-bar" style="margin-top:0.75rem;">
+                                    <div class="progress-bar-fill" style="width:0%;" id="quizScoreBar"></div>
+                                </div>
+                            </div>
+                            <div class="glass-card" style="margin-bottom:1.25rem;">
+                                <h4 style="font-weight:700;margin-bottom:0.75rem;">Domain Scores</h4>
+                                <div id="quizDomainScores" style="font-size:0.85rem;color:var(--text-secondary);">
+                                    Complete the quiz to see your domain-level breakdown</div>
+                            </div>
+                            <div class="glass-card">
+                                <h4 style="font-weight:700;margin-bottom:0.75rem;">Quiz History</h4>
+                                <div id="quizHistory" style="font-size:0.85rem;color:var(--text-secondary);">No attempts
+                                    yet</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sub-tab: Learning Resources -->
+                <div id="ctTool-learn" style="display:none;">
+                    <div style="display:flex;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+                        <button class="btn btn-primary btn-sm" onclick="filterResources('all')">All</button>
+                        <button class="btn btn-secondary btn-sm" onclick="filterResources('web')">Web Dev</button>
+                        <button class="btn btn-secondary btn-sm" onclick="filterResources('python')">Python</button>
+                        <button class="btn btn-secondary btn-sm" onclick="filterResources('dsa')">DSA</button>
+                        <button class="btn btn-secondary btn-sm" onclick="filterResources('system')">System
+                            Design</button>
+                        <button class="btn btn-secondary btn-sm" onclick="filterResources('devops')">DevOps</button>
+                        <button class="btn btn-secondary btn-sm" onclick="filterResources('ml')">ML/AI</button>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;"
+                        id="resourcesGrid"></div>
+                </div>
+
+                <!-- Sub-tab: Goals -->
+                <div id="ctTool-goals" style="display:none;">
+                    <div class="glass-card" style="margin-bottom:1.5rem;">
+                        <h3 style="font-weight:700;margin-bottom:1rem;">➕ Add a New Goal</h3>
+                        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+                            <input type="text" class="form-input" id="goalInput"
+                                placeholder="e.g., Complete 5 system design problems" style="flex:1;min-width:250px;">
+                            <select class="form-select" id="goalCategory" style="width:auto;">
+                                <option value="skill">🎯 Skill</option>
+                                <option value="project">🚀 Project</option>
+                                <option value="learning">📚 Learning</option>
+                                <option value="career">💼 Career</option>
+                            </select>
+                            <select class="form-select" id="goalDeadline" style="width:auto;">
+                                <option value="7">This Week</option>
+                                <option value="30">This Month</option>
+                                <option value="90">This Quarter</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="addGoal()"><i data-lucide="plus"
+                                    style="width:16px;height:16px;"></i> Add</button>
+                        </div>
+                    </div>
+                    <div id="goalsList" style="display:flex;flex-direction:column;gap:1rem;"></div>
+                    <div id="goalsEmpty" class="glass-card" style="text-align:center;padding:3rem;display:none;">
+                        <div style="font-size:2.5rem;margin-bottom:1rem;">🎯</div>
+                        <h3 style="font-weight:700;margin-bottom:0.5rem;">No goals yet</h3>
+                        <p style="color:var(--text-secondary);">Set your first goal to start tracking your career
+                            progress!</p>
+                    </div>
+                </div>
+
+                <!-- Sub-tab: AI Chat -->
+                <div id="ctTool-chat" style="display:none;">
+                    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+                        <div class="chat-panel" id="careerTwinChat" style="height:550px;">
+                            <div
+                                style="padding:1rem;border-bottom:1px solid var(--border-glass);display:flex;align-items:center;gap:0.75rem;">
+                                <div
+                                    style="width:40px;height:40px;border-radius:50%;background:var(--gradient-accent);display:flex;align-items:center;justify-content:center;color:white;">
+                                    <i data-lucide="bot"></i></div>
+                                <div>
+                                    <div style="font-weight:700;font-size:0.95rem;">Career Twin AI</div>
+                                    <div style="font-size:0.75rem;color:var(--success-400);">● Online</div>
+                                </div>
+                            </div>
+                            <div class="chat-messages" id="careerTwinMessages">
+                                <div class="chat-msg ai">Hello! I'm your AI Career Twin 🎯<br><br>Ask me about:<br>•
+                                    <strong>"What are my skills?"</strong> — See your Skill DNA<br>• <strong>"Am I
+                                        interview ready?"</strong> — Get readiness score<br>• <strong>"What career
+                                        path?"</strong> — Role recommendations<br>• <strong>"What should I
+                                        learn?"</strong> — Learning roadmap<br>• <strong>"How's my progress?"</strong> —
+                                    Growth report<br>• <strong>"Job market insights"</strong> — Salary & demand data
+                                </div>
+                            </div>
+                            <div class="chat-input-bar">
+                                <input type="text" placeholder="Ask your Career Twin..." id="careerTwinInput"
+                                    onkeypress="if(event.key==='Enter')sendCareerTwinMessage()">
+                                <button class="btn btn-accent btn-icon" onclick="sendCareerTwinMessage()"><i
+                                        data-lucide="send" style="width:18px;height:18px;"></i></button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="glass-card" style="margin-bottom:1.25rem;">
+                                <h4 style="font-weight:700;margin-bottom:0.75rem;">Career Readiness</h4>
+                                <div class="stat-card-value" style="font-size:2.5rem;color:var(--success-400);">78%
+                                </div>
+                                <div class="progress-bar" style="margin-top:0.75rem;">
+                                    <div class="progress-bar-fill" style="width:78%;"></div>
+                                </div>
+                                <p style="font-size:0.8rem;color:var(--text-tertiary);margin-top:0.5rem;">22% to
+                                    industry-ready</p>
+                            </div>
+                            <div class="glass-card">
+                                <h4 style="font-weight:700;margin-bottom:0.75rem;">Daily Growth</h4>
+                                <canvas id="dailyGrowthChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Shadow Interview -->
+            <div class="tab-panel" id="tab-interview">
+                <div class="page-header">
+                    <h1 class="page-title">AI Shadow Interviewer</h1>
+                    <p class="page-subtitle">Practice with AI-powered mock interviews</p>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                    <div class="glass-card" style="text-align:center;padding:2.5rem;">
+                        <div
+                            style="width:80px;height:80px;border-radius:50%;background:var(--gradient-cool);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem;color:white;">
+                            <i data-lucide="mic"></i>
+                        </div>
+                        <h3 style="font-weight:700;font-size:1.25rem;margin-bottom:0.5rem;">Start Mock Interview</h3>
+                        <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">AI evaluates your
+                            reasoning, communication, and technical thinking in real-time</p>
+                        <select class="form-select" style="width:auto;margin:0 auto 1rem;display:block;"
+                            id="interviewType">
+                            <option value="technical">Technical Interview</option>
+                            <option value="behavioral">Behavioral Interview</option>
+                            <option value="system-design">System Design</option>
+                            <option value="coding">Live Coding</option>
+                        </select>
+                        <button class="btn btn-primary btn-lg" onclick="startInterview()">
+                            <i data-lucide="play" style="width:18px;height:18px;"></i> Begin Interview
+                        </button>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3 style="font-weight:700;margin-bottom:1.25rem;">Interview Readiness Score</h3>
+                        <div style="text-align:center;margin-bottom:1.5rem;">
+                            <div
+                                style="font-size:4rem;font-weight:900;font-family:'Space Grotesk',sans-serif;background:var(--gradient-cool);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+                                74</div>
+                            <p style="color:var(--text-secondary);font-size:0.9rem;">/100 — Good. Keep practicing!</p>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                            <div>
+                                <div
+                                    style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
+                                    <span>Technical Thinking</span><span
+                                        style="color:var(--primary-400);font-weight:600;">82%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width:82%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
+                                    <span>Communication</span><span
+                                        style="color:var(--accent-400);font-weight:600;">71%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width:71%;background:var(--gradient-accent);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
+                                    <span>Reasoning</span><span
+                                        style="color:var(--success-400);font-weight:600;">69%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill"
+                                        style="width:69%;background:linear-gradient(135deg,#22c55e,#10b981);"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.25rem;">
+                                    <span>Problem Solving</span><span
+                                        style="color:var(--warning-400);font-weight:600;">76%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill" style="width:76%;background:var(--gradient-warm);">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interview Chat (hidden by default) -->
+                <div class="glass-card" style="margin-top:1.5rem;display:none;" id="interviewPanel">
+                    <div class="chat-panel" style="height:500px;" id="interviewChat">
+                        <div
+                            style="padding:1rem;border-bottom:1px solid var(--border-glass);display:flex;align-items:center;justify-content:space-between;">
+                            <div style="display:flex;align-items:center;gap:0.75rem;">
+                                <div
+                                    style="width:40px;height:40px;border-radius:50%;background:var(--gradient-cool);display:flex;align-items:center;justify-content:center;color:white;">
+                                    <i data-lucide="mic"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight:700;font-size:0.95rem;">Shadow Interviewer</div>
+                                    <div style="font-size:0.75rem;color:var(--danger-400);">● Recording</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="endInterview()">End Interview</button>
+                        </div>
+                        <div class="chat-messages" id="interviewMessages"></div>
+                        <div class="chat-input-bar">
+                            <input type="text" placeholder="Your answer..." id="interviewInput"
+                                onkeypress="if(event.key==='Enter')sendInterviewAnswer()">
+                            <button class="btn btn-primary btn-icon" onclick="sendInterviewAnswer()"><i
+                                    data-lucide="send" style="width:18px;height:18px;"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Badge Center -->
+            <div class="tab-panel" id="tab-badges">
+                <div class="page-header">
+                    <h1 class="page-title">Badge Center</h1>
+                    <p class="page-subtitle">Your earned achievements and milestones</p>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.25rem;"
+                    id="badgesGrid">
+                    <!-- Badges loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab: Growth Timeline -->
+            <div class="tab-panel" id="tab-growth">
+                <div class="page-header">
+                    <h1 class="page-title">Growth Timeline</h1>
+                    <p class="page-subtitle">Your skill development journey over time</p>
+                </div>
+                <div class="glass-card">
+                    <canvas id="growthChart" height="300"></canvas>
+                </div>
+                <div style="margin-top:1.5rem;" id="timelineEvents">
+                    <!-- Timeline events -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Submission Modal -->
+    <div class="modal-overlay" id="submitModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Submit Solution</h3>
+                <button class="modal-close" onclick="closeModal('submitModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">GitHub Repository URL</label>
+                <input type="url" class="form-input" id="submitGithub" placeholder="https://github.com/username/repo">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Demo Link (optional)</label>
+                <input type="url" class="form-input" id="submitDemo" placeholder="https://your-demo.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Documentation / Notes</label>
+                <textarea class="form-textarea" id="submitDocs"
+                    placeholder="Describe your approach, architecture decisions, and key features..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Project Files (optional)</label>
+                <input type="file" class="form-input" id="submitFiles" multiple style="padding:0.5rem;">
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="submitSolution()">
+                <i data-lucide="upload" style="width:18px;height:18px;"></i> Submit Solution
+            </button>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/student.js"></script>
+    <script>
+        lucide.createIcons();
+        // Show sidebar toggle on mobile
+        if (window.innerWidth <= 1024) document.getElementById('sidebarToggle').style.display = 'flex';
+        window.addEventListener('resize', () => {
+            document.getElementById('sidebarToggle').style.display = window.innerWidth <= 1024 ? 'flex' : 'none';
+        });
+    </script>
+</body>
+
+</html>

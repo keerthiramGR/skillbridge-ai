@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard — SkillBridge AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="animated-bg"></div>
+
+    <nav class="navbar">
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <button class="btn btn-icon btn-ghost" onclick="toggleSidebar()" style="display:none;" id="sidebarToggle"><i
+                    data-lucide="menu"></i></button>
+            <a href="../index.html" class="navbar-brand">
+                <div class="logo-icon"><i data-lucide="brain-circuit"></i></div>
+                <span>SkillBridge <span
+                        style="background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">AI</span></span>
+            </a>
+        </div>
+        <div class="navbar-actions">
+            <button class="theme-toggle" id="themeToggle"><i data-lucide="moon" id="themeIcon"></i></button>
+            <div
+                style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 1rem;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:var(--border-radius-full);">
+                <img class="avatar avatar-sm" id="userAvatar"
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=recruiter" alt="">
+                <span style="font-size:0.85rem;font-weight:600;" id="userName">Recruiter</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="sidebar-section-title">Challenges</li>
+                <li><a class="sidebar-link active" data-tab="tab-upload" onclick="switchRecruiterTab(this)"><span
+                            class="icon"><i data-lucide="upload-cloud"></i></span> Upload Challenge</a></li>
+                <li><a class="sidebar-link" data-tab="tab-manage" onclick="switchRecruiterTab(this)"><span
+                            class="icon"><i data-lucide="folder-open"></i></span> My Challenges</a></li>
+
+                <li class="sidebar-section-title">Talent</li>
+                <li><a class="sidebar-link" data-tab="tab-submissions" onclick="switchRecruiterTab(this)"><span
+                            class="icon"><i data-lucide="inbox"></i></span> Submissions</a></li>
+                <li><a class="sidebar-link" data-tab="tab-ranking" onclick="switchRecruiterTab(this)"><span
+                            class="icon"><i data-lucide="trophy"></i></span> AI Ranking</a></li>
+                <li><a class="sidebar-link" data-tab="tab-filter" onclick="switchRecruiterTab(this)"><span
+                            class="icon"><i data-lucide="filter"></i></span> Skill Filter</a></li>
+
+                <li class="sidebar-section-title">Hiring</li>
+                <li><a class="sidebar-link" data-tab="tab-recommendations" onclick="switchRecruiterTab(this)"><span
+                            class="icon"><i data-lucide="sparkles"></i></span> AI Recommendations</a></li>
+            </ul>
+            <div style="padding:1rem;">
+                <button class="btn btn-ghost" style="width:100%;justify-content:flex-start;color:var(--danger-400);"
+                    onclick="SessionManager.logout()">
+                    <i data-lucide="log-out" style="width:18px;height:18px;"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(59,130,246,0.2));color:var(--accent-400);">
+                            <i data-lucide="file-text"></i></div>
+                    </div>
+                    <div class="stat-card-value">5</div>
+                    <div class="stat-card-label">Active Challenges</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(16,185,129,0.2));color:var(--success-400);">
+                            <i data-lucide="users"></i></div>
+                    </div>
+                    <div class="stat-card-value">47</div>
+                    <div class="stat-card-label">Total Submissions</div>
+                    <div class="stat-card-trend up">↑ 12 this week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));color:var(--primary-400);">
+                            <i data-lucide="star"></i></div>
+                    </div>
+                    <div class="stat-card-value">18</div>
+                    <div class="stat-card-label">Top Candidates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon"
+                            style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2));color:var(--warning-400);">
+                            <i data-lucide="handshake"></i></div>
+                    </div>
+                    <div class="stat-card-value">3</div>
+                    <div class="stat-card-label">Hires Made</div>
+                </div>
+            </div>
+
+            <!-- Tab: Upload Challenge -->
+            <div class="tab-panel active" id="tab-upload">
+                <div class="page-header">
+                    <h1 class="page-title">Upload Challenge</h1>
+                    <p class="page-subtitle">Create a real-world problem statement for students to solve</p>
+                </div>
+                <div class="glass-card" style="max-width:800px;">
+                    <div class="form-group">
+                        <label class="form-label">Problem Title</label>
+                        <input type="text" class="form-input" id="problemTitle"
+                            placeholder="e.g., Build a Real-Time Analytics Dashboard">
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Domain</label>
+                            <select class="form-select" id="problemDomain">
+                                <option value="">Select Domain</option>
+                                <option value="web">Web Development</option>
+                                <option value="ml">Machine Learning</option>
+                                <option value="data">Data Science</option>
+                                <option value="mobile">Mobile Development</option>
+                                <option value="devops">DevOps & Cloud</option>
+                                <option value="security">Cybersecurity</option>
+                                <option value="blockchain">Blockchain</option>
+                                <option value="iot">IoT</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Difficulty Level</label>
+                            <select class="form-select" id="problemDifficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Problem Description</label>
+                        <textarea class="form-textarea" id="problemDesc"
+                            placeholder="Provide a detailed problem statement..." style="min-height:160px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Required Skills (comma-separated)</label>
+                        <input type="text" class="form-input" id="problemSkills"
+                            placeholder="e.g., React, Python, PostgreSQL, Docker">
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Deadline</label>
+                            <input type="date" class="form-input" id="problemDeadline">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Max Participants</label>
+                            <input type="number" class="form-input" id="problemMaxParticipants" placeholder="50"
+                                value="50">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Evaluation Criteria</label>
+                        <textarea class="form-textarea" id="problemCriteria"
+                            placeholder="How will submissions be evaluated?&#10;e.g., Code quality (30%), Performance (25%), Documentation (20%), Innovation (25%)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">File Attachments (optional)</label>
+                        <input type="file" class="form-input" id="problemFiles" multiple style="padding:0.5rem;">
+                        <p class="form-hint">Upload reference documents, datasets, or design specs (max 10MB each)</p>
+                    </div>
+                    <button class="btn btn-accent btn-lg" style="width:100%;margin-top:0.5rem;"
+                        onclick="uploadChallenge()">
+                        <i data-lucide="upload-cloud" style="width:20px;height:20px;"></i> Publish Challenge
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab: My Challenges -->
+            <div class="tab-panel" id="tab-manage">
+                <div class="page-header">
+                    <h1 class="page-title">My Challenges</h1>
+                    <p class="page-subtitle">Manage your published problem statements</p>
+                </div>
+                <div id="challengesList" style="display:flex;flex-direction:column;gap:1rem;">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Tab: Submissions -->
+            <div class="tab-panel" id="tab-submissions">
+                <div class="page-header">
+                    <h1 class="page-title">Submissions</h1>
+                    <p class="page-subtitle">Review student solutions for your challenges</p>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Challenge</th>
+                                <th>Submitted</th>
+                                <th>AI Score</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recSubmissionsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: AI Ranking -->
+            <div class="tab-panel" id="tab-ranking">
+                <div class="page-header">
+                    <h1 class="page-title">AI Candidate Ranking</h1>
+                    <p class="page-subtitle">AI-powered ranking of candidates based on Skill DNA and performance</p>
+                </div>
+                <div id="rankingList" style="display:flex;flex-direction:column;gap:1rem;"></div>
+            </div>
+
+            <!-- Tab: Skill Filter -->
+            <div class="tab-panel" id="tab-filter">
+                <div class="page-header">
+                    <h1 class="page-title">Skill Filter</h1>
+                    <p class="page-subtitle">Find candidates matching specific skill requirements</p>
+                </div>
+                <div class="glass-card" style="margin-bottom:1.5rem;">
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
+                        <div class="form-group" style="flex:1;min-width:200px;margin:0;">
+                            <label class="form-label">Skills</label>
+                            <input type="text" class="form-input" id="skillFilterInput"
+                                placeholder="e.g., Python, React, Docker">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label">Min Score</label>
+                            <input type="number" class="form-input" id="minScoreFilter" value="70" style="width:100px;">
+                        </div>
+                        <button class="btn btn-primary" onclick="filterCandidates()">
+                            <i data-lucide="search" style="width:16px;height:16px;"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div id="filteredCandidates"
+                    style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;"></div>
+            </div>
+
+            <!-- Tab: AI Recommendations -->
+            <div class="tab-panel" id="tab-recommendations">
+                <div class="page-header">
+                    <h1 class="page-title">AI Hiring Recommendations</h1>
+                    <p class="page-subtitle">Smart talent matching powered by Skill DNA analysis</p>
+                </div>
+                <div id="recommendationsList" style="display:flex;flex-direction:column;gap:1.25rem;"></div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/recruiter.js"></script>
+    <script>
+        lucide.createIcons();
+        if (window.innerWidth <= 1024) document.getElementById('sidebarToggle').style.display = 'flex';
+        window.addEventListener('resize', () => {
+            document.getElementById('sidebarToggle').style.display = window.innerWidth <= 1024 ? 'flex' : 'none';
+        });
+    </script>
+</body>
+
+</html>
