@@ -4,7 +4,7 @@
    ============================================= */
 
 // Google OAuth Client ID — set in CONFIG
-const GOOGLE_CLIENT_ID = '832944078664-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '36235152326-7j0eds0269ibmlgtqjv58iuf44k6e9o4.apps.googleusercontent.com';
 
 // Current auth state
 let authState = {
