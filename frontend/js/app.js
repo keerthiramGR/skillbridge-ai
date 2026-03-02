@@ -5,7 +5,7 @@
 
 // ---- Configuration ----
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:8000',
+    API_BASE_URL: 'https://skillbridge-ai-keerthiram.vercel.app',
     STORAGE_KEYS: {
         THEME: 'skillbridge_theme',
         TOKEN: 'skillbridge_token',
