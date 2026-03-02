@@ -456,18 +456,73 @@ const placementData = [
     { id: 10, name: 'Rohit Verma', university: 'VIT University', skillDNA: 83, solved: 8, hiredBy: 'Zomato', role: 'Frontend Dev', package: '₹16 LPA', status: 'placed', avatar: 'rohit', domain: 'frontend', email: 'rohit@student.edu', skills: ['React', 'Vue.js', 'CSS', 'JavaScript'] },
 ];
 
+function getSelectedCollege() {
+    return document.getElementById('collegeFilter')?.value || 'all';
+}
+
+function getFilteredData(data) {
+    const college = getSelectedCollege();
+    if (college === 'all') return data;
+    return data.filter(s => s.university === college);
+}
+
+function onCollegeFilterChange() {
+    const college = getSelectedCollege();
+    const banner = document.getElementById('collegeInfoBanner');
+    const badge = document.getElementById('adminRoleBadge');
+
+    // Update role badge
+    if (badge) {
+        if (college === 'all') {
+            badge.innerHTML = '<span class="badge badge-warning" style="font-size:0.8rem;padding:0.4rem 0.75rem;">🛡️ Super Admin</span>';
+        } else {
+            badge.innerHTML = `<span class="badge badge-accent" style="font-size:0.8rem;padding:0.4rem 0.75rem;">🏛️ ${college}</span>`;
+        }
+    }
+
+    // Show college info banner
+    if (banner) {
+        if (college !== 'all') {
+            const collegeStudents = placementData.filter(s => s.university === college);
+            const placed = collegeStudents.filter(s => s.status === 'placed');
+            banner.style.display = 'block';
+            banner.innerHTML = `
+                <div class="glass-card" style="padding:1rem 1.5rem;margin-bottom:1rem;border-left:3px solid var(--accent-400);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
+                    <div>
+                        <div style="font-weight:700;font-size:1.05rem;">📊 ${college} — Placement Dashboard</div>
+                        <div style="color:var(--text-secondary);font-size:0.85rem;">Showing placement data for ${college} students only</div>
+                    </div>
+                    <div style="display:flex;gap:1.5rem;">
+                        <div style="text-align:center;"><div style="font-size:1.25rem;font-weight:800;color:var(--primary-400);">${collegeStudents.length}</div><div style="font-size:0.65rem;color:var(--text-tertiary);">Students</div></div>
+                        <div style="text-align:center;"><div style="font-size:1.25rem;font-weight:800;color:var(--success-400);">${placed.length}</div><div style="font-size:0.65rem;color:var(--text-tertiary);">Placed</div></div>
+                        <div style="text-align:center;"><div style="font-size:1.25rem;font-weight:800;color:var(--accent-400);">${collegeStudents.length > 0 ? Math.round(placed.length / collegeStudents.length * 100) : 0}%</div><div style="font-size:0.65rem;color:var(--text-tertiary);">Rate</div></div>
+                    </div>
+                </div>
+            `;
+        } else {
+            banner.style.display = 'none';
+        }
+    }
+
+    renderPlacementReport();
+    renderLeaderboard();
+}
+
 function renderPlacementReport() {
-    const placed = placementData.filter(s => s.status === 'placed');
-    const interviewing = placementData.filter(s => s.status === 'interviewing');
-    const avgPkg = placed.reduce((sum, s) => sum + parseInt(s.package.replace(/[^0-9]/g, '') || 0), 0) / (placed.length || 1);
+    const filteredData = getFilteredData(placementData);
+    const placed = filteredData.filter(s => s.status === 'placed');
+    const interviewing = filteredData.filter(s => s.status === 'interviewing');
+    const avgPkg = placed.length > 0 ? placed.reduce((sum, s) => sum + parseInt(s.package.replace(/[^0-9]/g, '') || 0), 0) / placed.length : 0;
+    const college = getSelectedCollege();
+    const label = college === 'all' ? 'Platform-wide' : college;
 
     // Stats
     const statsEl = document.getElementById('placementStats');
     if (statsEl) {
         statsEl.innerHTML = `
-            <div class="stat-card"><div class="stat-card-icon" style="background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(22,163,74,0.2));color:var(--success-400);"><i data-lucide="check-circle"></i></div><div class="stat-card-value">${placed.length}</div><div class="stat-card-label">Students Placed</div><div class="stat-card-change positive">${Math.round(placed.length / placementData.length * 100)}% rate</div></div>
-            <div class="stat-card"><div class="stat-card-icon" style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));color:var(--primary-400);"><i data-lucide="indian-rupee"></i></div><div class="stat-card-value">₹${avgPkg} LPA</div><div class="stat-card-label">Avg Package</div><div class="stat-card-change positive">↑ 15% vs last year</div></div>
-            <div class="stat-card"><div class="stat-card-icon" style="background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(59,130,246,0.2));color:var(--accent-400);"><i data-lucide="building-2"></i></div><div class="stat-card-value">${new Set(placed.map(s => s.hiredBy)).size}</div><div class="stat-card-label">Companies Hiring</div><div class="stat-card-change positive">↑ 3 new</div></div>
+            <div class="stat-card"><div class="stat-card-icon" style="background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(22,163,74,0.2));color:var(--success-400);"><i data-lucide="check-circle"></i></div><div class="stat-card-value">${placed.length}</div><div class="stat-card-label">Students Placed</div><div class="stat-card-change positive">${filteredData.length > 0 ? Math.round(placed.length / filteredData.length * 100) : 0}% rate</div></div>
+            <div class="stat-card"><div class="stat-card-icon" style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));color:var(--primary-400);"><i data-lucide="indian-rupee"></i></div><div class="stat-card-value">₹${avgPkg} LPA</div><div class="stat-card-label">Avg Package</div><div class="stat-card-change positive">${label}</div></div>
+            <div class="stat-card"><div class="stat-card-icon" style="background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(59,130,246,0.2));color:var(--accent-400);"><i data-lucide="building-2"></i></div><div class="stat-card-value">${new Set(placed.map(s => s.hiredBy)).size}</div><div class="stat-card-label">Companies Hiring</div><div class="stat-card-change positive">${filteredData.length} students</div></div>
             <div class="stat-card"><div class="stat-card-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2));color:var(--warning-400);"><i data-lucide="clock"></i></div><div class="stat-card-value">${interviewing.length}</div><div class="stat-card-label">In Interviews</div><div class="stat-card-change">Pipeline active</div></div>
         `;
         if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -476,7 +531,11 @@ function renderPlacementReport() {
     // Table
     const tbody = document.getElementById('placementTable');
     if (tbody) {
-        tbody.innerHTML = placementData.map(s => `
+        if (filteredData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-secondary);">No students found for this college.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = filteredData.map(s => `
             <tr style="cursor:pointer;" onclick="viewPlacementProfile(${s.id})">
                 <td style="display:flex;align-items:center;gap:0.75rem;">
                     <img class="avatar avatar-sm" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${s.avatar}" alt="">
@@ -609,8 +668,9 @@ const leaderboardData = [
 function renderLeaderboard() {
     const domainFilter = document.getElementById('leaderDomainFilter')?.value || 'all';
     const uniFilter = document.getElementById('leaderUniFilter')?.value || 'all';
+    const collegeFilter = getSelectedCollege();
 
-    let filtered = leaderboardData;
+    let filtered = collegeFilter !== 'all' ? leaderboardData.filter(s => s.university === collegeFilter) : leaderboardData;
     if (domainFilter !== 'all') filtered = filtered.filter(s => s.domain === domainFilter);
     if (uniFilter !== 'all') filtered = filtered.filter(s => s.university.includes(uniFilter));
 
@@ -729,6 +789,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPlacementReport();
     initPlacementCharts();
     renderLeaderboard();
+
+    // Initialize admin role badge
+    const badge = document.getElementById('adminRoleBadge');
+    if (badge) badge.innerHTML = '<span class="badge badge-warning" style="font-size:0.8rem;padding:0.4rem 0.75rem;">🛡️ Super Admin</span>';
 
     const user = SessionManager.getUser();
     if (user) {

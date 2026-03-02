@@ -182,10 +182,31 @@
 
             <!-- Tab: Placement Report -->
             <div class="tab-panel" id="tab-placement">
-                <div class="page-header">
-                    <h1 class="page-title">College Placement Report</h1>
-                    <p class="page-subtitle">Comprehensive placement analytics and student performance metrics</p>
+                <div class="page-header"
+                    style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h1 class="page-title">College Placement Report</h1>
+                        <p class="page-subtitle">Comprehensive placement analytics and student performance metrics</p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:1rem;">
+                        <div id="adminRoleBadge"></div>
+                        <div class="form-group" style="margin:0;min-width:200px;">
+                            <select class="form-select" id="collegeFilter" onchange="onCollegeFilterChange()">
+                                <option value="all">🏛️ All Colleges (Super Admin)</option>
+                                <option value="VIT University">VIT University</option>
+                                <option value="IIT Madras">IIT Madras</option>
+                                <option value="NIT Trichy">NIT Trichy</option>
+                                <option value="BITS Pilani">BITS Pilani</option>
+                                <option value="Anna University">Anna University</option>
+                                <option value="IIIT Hyderabad">IIIT Hyderabad</option>
+                                <option value="SRM University">SRM University</option>
+                                <option value="NIT Calicut">NIT Calicut</option>
+                                <option value="Osmania University">Osmania University</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+                <div id="collegeInfoBanner" style="display:none;"></div>
                 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;"
                     id="placementStats"></div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">

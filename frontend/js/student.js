@@ -119,22 +119,35 @@ async function submitSolution() {
 
     if (!github) { toast.error('GitHub repository URL is required'); return; }
 
+    // Save to localStorage so Recruiter dashboard can see it
+    const problem = mockProblems.find(p => p.id === currentProblemId);
+    const pTitle = problem ? problem.title : 'External Challenge';
+
+    const user = SessionManager.getUser() || { name: 'Student', picture: 'default' };
+    const avatarSeed = user.name ? user.name.toLowerCase().replace(/\s+/g, '') : 'student';
+
+    const newSub = {
+        id: Date.now(),
+        student: user.name || 'Anonymous Student',
+        challenge: pTitle,
+        date: new Date().toISOString().split('T')[0],
+        score: null,
+        status: 'pending',
+        avatar: avatarSeed,
+        github: github,
+        feedback: ''
+    };
+
+    const existingSubs = JSON.parse(localStorage.getItem('sb_submissions') || '[]');
+    existingSubs.unshift(newSub);
+    localStorage.setItem('sb_submissions', JSON.stringify(existingSubs));
+
     showLoading();
-    try {
-        await api.post('/submissions/create', {
-            problem_id: currentProblemId,
-            github_url: github,
-            demo_url: demo,
-            documentation: docs
-        });
+    setTimeout(() => {
         hideLoading();
-        toast.success('Solution submitted successfully!');
+        toast.success('Solution submitted! Recruiter can now see it.');
         closeModal('submitModal');
-    } catch {
-        hideLoading();
-        toast.success('Solution submitted! (Demo Mode)');
-        closeModal('submitModal');
-    }
+    }, 800);
 }
 
 // ---- Skill DNA Chart ----

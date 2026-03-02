@@ -505,6 +505,14 @@ function saveToShortlist(id, name) {
 
 // ---- Initialize ----
 document.addEventListener('DOMContentLoaded', () => {
+    // Load student submissions from localStorage (cross-role demo bridge)
+    const localSubs = JSON.parse(localStorage.getItem('sb_submissions') || '[]');
+    localSubs.reverse().forEach(ls => {
+        if (!recSubmissions.find(rs => rs.id === ls.id)) {
+            recSubmissions.unshift(ls);
+        }
+    });
+
     renderChallenges();
     renderRecSubmissions();
     renderRanking();

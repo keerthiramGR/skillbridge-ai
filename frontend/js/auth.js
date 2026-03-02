@@ -139,6 +139,8 @@ async function authenticateWithBackend(googleUser, credential) {
             proceedToRecruiterVerification();
         } else if (authState.role === 'admin') {
             proceedToAdminVerification();
+        } else if (authState.role === 'college-admin') {
+            proceedToCollegeAdminVerification();
         } else {
             completeAuth(response);
         }
@@ -151,6 +153,8 @@ async function authenticateWithBackend(googleUser, credential) {
             proceedToRecruiterVerification();
         } else if (authState.role === 'admin') {
             proceedToAdminVerification();
+        } else if (authState.role === 'college-admin') {
+            proceedToCollegeAdminVerification();
         } else {
             completeAuthDemo();
         }
@@ -219,6 +223,8 @@ function demoGoogleLogin() {
             proceedToRecruiterVerification();
         } else if (authState.role === 'admin') {
             proceedToAdminVerification();
+        } else if (authState.role === 'college-admin') {
+            proceedToCollegeAdminVerification();
         } else {
             completeAuthDemo();
         }
@@ -366,6 +372,18 @@ function resendOTP() {
     toast.info('New OTP sent to your email');
 }
 
+// ---- College Admin Verification ----
+function proceedToCollegeAdminVerification() {
+    document.getElementById('step-google').style.display = 'none';
+    document.getElementById('step-college-admin-verify').style.display = 'block';
+
+    const titleEl = document.getElementById('authTitle');
+    const subEl = document.getElementById('authSubtitle');
+    if (titleEl) titleEl.textContent = 'College Admin';
+    if (subEl) subEl.textContent = 'Select your institution to continue';
+    hideStatus();
+}
+
 // ---- Admin Verification ----
 function proceedToAdminVerification() {
     authState.step = 'admin-verify';
@@ -447,7 +465,8 @@ function redirectToDashboard() {
     const dashboardMap = {
         student: 'student/dashboard.html',
         recruiter: 'recruiter/dashboard.html',
-        admin: 'admin/dashboard.html'
+        admin: 'admin/dashboard.html',
+        'college-admin': 'admin/dashboard.html'
     };
     window.location.href = dashboardMap[authState.role] || 'student/dashboard.html';
 }

@@ -151,6 +151,36 @@
                 </button>
             </div>
 
+            <!-- Step 2 Alt: College Admin Verification -->
+            <div id="step-college-admin-verify" style="display:none;">
+                <div class="auth-divider">Select Your College</div>
+                <p style="text-align:center;color:var(--text-secondary);font-size:0.9rem;margin-bottom:1.5rem;">
+                    Access your institution's specific placement report and leaderboard.
+                </p>
+
+                <div class="form-group">
+                    <label class="form-label">Institution Name</label>
+                    <select class="form-select" id="collegeAdminSelect">
+                        <option value="" disabled selected>Select your college</option>
+                        <option value="VIT University">VIT University</option>
+                        <option value="IIT Madras">IIT Madras</option>
+                        <option value="NIT Trichy">NIT Trichy</option>
+                        <option value="BITS Pilani">BITS Pilani</option>
+                        <option value="Anna University">Anna University</option>
+                        <option value="IIIT Hyderabad">IIIT Hyderabad</option>
+                        <option value="SRM University">SRM University</option>
+                        <option value="NIT Calicut">NIT Calicut</option>
+                        <option value="Osmania University">Osmania University</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" style="width:100%;" onclick="verifyCollegeAdmin()"
+                    id="collegeAdminVerifyBtn">
+                    <i data-lucide="school" style="width:18px;height:18px;"></i>
+                    Enter Dashboard
+                </button>
+            </div>
+
             <!-- Status message -->
             <div id="authStatus"
                 style="display:none;text-align:center;padding:1rem;margin-top:1rem;border-radius:var(--border-radius-md);font-size:0.9rem;">
