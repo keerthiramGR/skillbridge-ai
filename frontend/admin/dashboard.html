@@ -49,6 +49,12 @@
                 <li class="sidebar-section-title">Analytics</li>
                 <li><a class="sidebar-link" data-tab="tab-analytics" onclick="switchAdminTab(this)"><span
                             class="icon"><i data-lucide="bar-chart-3"></i></span> Platform Analytics</a></li>
+
+                <li class="sidebar-section-title">Reports</li>
+                <li><a class="sidebar-link" data-tab="tab-placement" onclick="switchAdminTab(this)"><span
+                            class="icon"><i data-lucide="file-bar-chart"></i></span> Placement Report</a></li>
+                <li><a class="sidebar-link" data-tab="tab-leaderboard" onclick="switchAdminTab(this)"><span
+                            class="icon"><i data-lucide="trophy"></i></span> Student Leaderboard</a></li>
             </ul>
             <div style="padding:1rem;">
                 <button class="btn btn-ghost" style="width:100%;justify-content:flex-start;color:var(--danger-400);"
@@ -65,7 +71,8 @@
                     <div class="stat-card-header">
                         <div class="stat-card-icon"
                             style="background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));color:var(--primary-400);">
-                            <i data-lucide="users"></i></div>
+                            <i data-lucide="users"></i>
+                        </div>
                     </div>
                     <div class="stat-card-value">1,284</div>
                     <div class="stat-card-label">Total Users</div>
@@ -75,7 +82,8 @@
                     <div class="stat-card-header">
                         <div class="stat-card-icon"
                             style="background:linear-gradient(135deg,rgba(14,165,233,0.2),rgba(59,130,246,0.2));color:var(--accent-400);">
-                            <i data-lucide="briefcase"></i></div>
+                            <i data-lucide="briefcase"></i>
+                        </div>
                     </div>
                     <div class="stat-card-value">42</div>
                     <div class="stat-card-label">Active Recruiters</div>
@@ -85,7 +93,8 @@
                     <div class="stat-card-header">
                         <div class="stat-card-icon"
                             style="background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(16,185,129,0.2));color:var(--success-400);">
-                            <i data-lucide="file-text"></i></div>
+                            <i data-lucide="file-text"></i>
+                        </div>
                     </div>
                     <div class="stat-card-value">87</div>
                     <div class="stat-card-label">Active Problems</div>
@@ -94,7 +103,8 @@
                     <div class="stat-card-header">
                         <div class="stat-card-icon"
                             style="background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(239,68,68,0.2));color:var(--warning-400);">
-                            <i data-lucide="clock"></i></div>
+                            <i data-lucide="clock"></i>
+                        </div>
                     </div>
                     <div class="stat-card-value">6</div>
                     <div class="stat-card-label">Pending Approvals</div>
@@ -168,6 +178,83 @@
                         <canvas id="funnelChart" height="250"></canvas>
                     </div>
                 </div>
+            </div>
+
+            <!-- Tab: Placement Report -->
+            <div class="tab-panel" id="tab-placement">
+                <div class="page-header">
+                    <h1 class="page-title">College Placement Report</h1>
+                    <p class="page-subtitle">Comprehensive placement analytics and student performance metrics</p>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;"
+                    id="placementStats"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+                    <div class="glass-card">
+                        <h3 style="font-weight:700;margin-bottom:1rem;">Placement Rate by Domain</h3>
+                        <canvas id="placementDomainChart" height="250"></canvas>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-weight:700;margin-bottom:1rem;">Monthly Placements</h3>
+                        <canvas id="monthlyPlacementChart" height="250"></canvas>
+                    </div>
+                </div>
+                <div class="glass-card" style="margin-bottom:1.5rem;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                        <h3 style="font-weight:700;">Top Placed Students</h3>
+                        <button class="btn btn-primary btn-sm" onclick="exportPlacementReport()">📥 Export PDF</button>
+                    </div>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>University</th>
+                                    <th>Skill DNA</th>
+                                    <th>Problems Solved</th>
+                                    <th>Hired By</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="placementTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Student Leaderboard -->
+            <div class="tab-panel" id="tab-leaderboard">
+                <div class="page-header">
+                    <h1 class="page-title">Student Leaderboard</h1>
+                    <p class="page-subtitle">Top performers solving recruiter challenges — ranked by Skill DNA score</p>
+                </div>
+                <div class="glass-card" style="margin-bottom:1.5rem;">
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
+                        <div class="form-group" style="flex:1;min-width:150px;margin:0;">
+                            <label class="form-label">Filter by Domain</label>
+                            <select class="form-select" id="leaderDomainFilter" onchange="renderLeaderboard()">
+                                <option value="all">All Domains</option>
+                                <option value="web">Web Development</option>
+                                <option value="ml">Machine Learning</option>
+                                <option value="backend">Backend</option>
+                                <option value="devops">DevOps</option>
+                                <option value="frontend">Frontend</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;min-width:150px;margin:0;">
+                            <label class="form-label">University</label>
+                            <select class="form-select" id="leaderUniFilter" onchange="renderLeaderboard()">
+                                <option value="all">All Universities</option>
+                                <option value="VIT">VIT University</option>
+                                <option value="IIT">IIT Madras</option>
+                                <option value="NIT">NIT Trichy</option>
+                                <option value="BITS">BITS Pilani</option>
+                                <option value="Anna">Anna University</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="exportLeaderboard()">📥 Export</button>
+                    </div>
+                </div>
+                <div id="leaderboardList" style="display:flex;flex-direction:column;gap:1rem;"></div>
             </div>
         </main>
     </div>
