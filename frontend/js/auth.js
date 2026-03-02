@@ -3,6 +3,9 @@
    Google OAuth, OTP, Admin 2FA, JWT
    ============================================= */
 
+// Google OAuth Client ID — set in CONFIG
+const GOOGLE_CLIENT_ID = '832944078664-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com';
+
 // Current auth state
 let authState = {
     role: null,
@@ -18,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupAuthUI();
     setupOTPInputs();
+    initGoogleSignIn();
 });
 
 function setupAuthUI() {
@@ -61,65 +65,210 @@ function setupAuthUI() {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
-// ---- Google Sign-In ----
-function handleGoogleLogin() {
-    // In production, use Google Identity Services
-    // For now, simulate Google OAuth flow
-    const mockUser = {
-        name: 'Demo User',
-        email: 'demo@skillbridge.ai',
-        picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=skillbridge',
-        sub: 'google-uid-' + Date.now()
-    };
+// ---- Google Sign-In (Google Identity Services) ----
+function initGoogleSignIn() {
+    // Check if Google Identity Services SDK loaded
+    if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: handleGoogleCredentialResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+        });
+    }
+}
+
+// Called when Google returns a credential
+function handleGoogleCredentialResponse(response) {
+    if (!response.credential) {
+        toast.error('Google sign-in failed. Please try again.');
+        return;
+    }
 
     showLoading();
 
-    // Simulate API call
-    setTimeout(async () => {
-        try {
-            // Call backend to validate Google token and get JWT
-            const response = await api.post('/auth/google', {
-                token: 'mock-google-token',
-                role: authState.role,
-                name: mockUser.name,
-                email: mockUser.email,
-                picture: mockUser.picture,
-                google_id: mockUser.sub
-            });
+    // Decode the JWT to get user info
+    const payload = decodeJwtPayload(response.credential);
 
-            authState.googleUser = mockUser;
-            authState.googleToken = 'mock-token';
+    const googleUser = {
+        name: payload.name,
+        email: payload.email,
+        picture: payload.picture,
+        sub: payload.sub // Google unique ID
+    };
 
-            hideLoading();
-            showStatus('Google sign-in successful!', 'success');
+    authState.googleUser = googleUser;
+    authState.googleToken = response.credential;
 
-            // Route based on role
-            if (authState.role === 'recruiter') {
-                proceedToRecruiterVerification();
-            } else if (authState.role === 'admin') {
-                proceedToAdminVerification();
-            } else {
-                // Student — direct dashboard access
-                completeAuth(response);
-            }
-        } catch (error) {
-            hideLoading();
-            // If backend is not running, simulate for demo
-            authState.googleUser = mockUser;
-            authState.googleToken = 'mock-token';
-
-            showStatus('Google sign-in successful! (Demo Mode)', 'success');
-
-            if (authState.role === 'recruiter') {
-                proceedToRecruiterVerification();
-            } else if (authState.role === 'admin') {
-                proceedToAdminVerification();
-            } else {
-                completeAuthDemo();
-            }
-        }
-    }, 1500);
+    // Try to authenticate with backend
+    authenticateWithBackend(googleUser, response.credential);
 }
+
+// Decode Google JWT payload (base64)
+function decodeJwtPayload(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join('')
+        );
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return {};
+    }
+}
+
+async function authenticateWithBackend(googleUser, credential) {
+    try {
+        const response = await api.post('/auth/google', {
+            token: credential,
+            role: authState.role,
+            name: googleUser.name,
+            email: googleUser.email,
+            picture: googleUser.picture,
+            google_id: googleUser.sub
+        });
+
+        hideLoading();
+        showStatus(`Welcome, ${googleUser.name}!`, 'success');
+
+        // Route based on role
+        if (authState.role === 'recruiter') {
+            proceedToRecruiterVerification();
+        } else if (authState.role === 'admin') {
+            proceedToAdminVerification();
+        } else {
+            completeAuth(response);
+        }
+    } catch (error) {
+        hideLoading();
+        // Backend not available — proceed in demo mode with real Google user data
+        showStatus(`Welcome, ${googleUser.name}! (Demo Mode)`, 'success');
+
+        if (authState.role === 'recruiter') {
+            proceedToRecruiterVerification();
+        } else if (authState.role === 'admin') {
+            proceedToAdminVerification();
+        } else {
+            completeAuthDemo();
+        }
+    }
+}
+
+// Triggered by the Google button click (either real Google or fallback)
+function handleGoogleLogin() {
+    // Try using Google Identity Services popup
+    if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.prompt((notification) => {
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                // Google One Tap not available — fallback to redirect flow
+                googlePopupFallback();
+            }
+        });
+    } else {
+        // Google SDK not loaded — fallback to demo mode
+        googlePopupFallback();
+    }
+}
+
+function googlePopupFallback() {
+    // Use Google OAuth 2.0 implicit flow as fallback
+    if (GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.includes('xxxx')) {
+        // Real client ID — use OAuth popup
+        const redirectUri = window.location.origin + '/login.html';
+        const scope = 'email profile openid';
+        const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
+
+        // Open popup
+        const popup = window.open(oauthUrl, 'googleAuth', 'width=500,height=600,menubar=no,toolbar=no');
+
+        // Listen for redirect
+        const checkClosed = setInterval(() => {
+            if (popup && popup.closed) {
+                clearInterval(checkClosed);
+            }
+        }, 500);
+    } else {
+        // No real client ID — use demo mode
+        demoGoogleLogin();
+    }
+}
+
+// Demo mode fallback when no Google Client ID is configured
+function demoGoogleLogin() {
+    const demoUsers = {
+        student: { name: 'Keerthiram G R', email: 'keerthiram@student.edu', picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=keerthiram' },
+        recruiter: { name: 'Priya Sharma', email: 'recruiter@techcorp.com', picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=priya' },
+        admin: { name: 'Admin SkillBridge', email: 'admin@skillbridge.ai', picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin' }
+    };
+
+    const mockUser = demoUsers[authState.role] || demoUsers.student;
+    mockUser.sub = 'google-uid-' + Date.now();
+
+    showLoading();
+
+    setTimeout(() => {
+        authState.googleUser = mockUser;
+        authState.googleToken = 'demo-google-token';
+        hideLoading();
+        showStatus(`Welcome, ${mockUser.name}! (Demo Mode)`, 'success');
+
+        if (authState.role === 'recruiter') {
+            proceedToRecruiterVerification();
+        } else if (authState.role === 'admin') {
+            proceedToAdminVerification();
+        } else {
+            completeAuthDemo();
+        }
+    }, 1200);
+}
+
+// Handle OAuth redirect (check URL hash for access_token)
+function checkOAuthRedirect() {
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+        const params = new URLSearchParams(hash.substring(1));
+        const accessToken = params.get('access_token');
+        if (accessToken) {
+            // Clear hash
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+            // Fetch user info from Google
+            fetchGoogleUserInfo(accessToken);
+        }
+    }
+}
+
+async function fetchGoogleUserInfo(accessToken) {
+    showLoading();
+    try {
+        const res = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        const userInfo = await res.json();
+
+        const googleUser = {
+            name: userInfo.name,
+            email: userInfo.email,
+            picture: userInfo.picture,
+            sub: userInfo.id
+        };
+
+        authState.googleUser = googleUser;
+        authState.googleToken = accessToken;
+
+        authenticateWithBackend(googleUser, accessToken);
+    } catch (error) {
+        hideLoading();
+        toast.error('Failed to get Google user info. Please try again.');
+    }
+}
+
+// Check for OAuth redirect on page load
+window.addEventListener('load', () => {
+    checkOAuthRedirect();
+});
 
 // ---- Recruiter Verification Flow ----
 function proceedToRecruiterVerification() {
@@ -278,9 +427,9 @@ function completeAuth(response) {
 }
 
 function completeAuthDemo() {
-    // Demo mode — create mock session
+    // Demo mode — create session with Google user data
     const mockToken = 'demo-jwt-' + Date.now();
-    const mockUser = authState.googleUser || {
+    const user = authState.googleUser || {
         name: 'Demo User',
         email: 'demo@skillbridge.ai',
         picture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=skillbridge',
@@ -288,7 +437,7 @@ function completeAuthDemo() {
     };
 
     SessionManager.setToken(mockToken);
-    SessionManager.setUser({ ...mockUser, role: authState.role });
+    SessionManager.setUser({ ...user, role: authState.role });
     localStorage.setItem(CONFIG.STORAGE_KEYS.ROLE, authState.role);
 
     setTimeout(() => redirectToDashboard(), 800);
